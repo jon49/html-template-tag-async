@@ -30,18 +30,18 @@ function* htmlGenerator(literals, ...subs) {
 }
 
 class Runner {
+
    constructor(generator, callback) {
       this.g = generator
       this.c = callback
    }
+
    async start() {
-      var val = this.g.next()
-      var e
-      while (!val.done) {
+      var val, e
+      while ((val = this.g.next()) && !val.done) {
          var v = val.value
          if (v instanceof Runner || (v.e instanceof Runner && (v = v.e))) {
             await v.start()
-            val = this.g.next()
             continue
          }
          if (e = v.e) {
@@ -54,7 +54,6 @@ class Runner {
          } else {
             this.c(v)
          }
-         val = this.g.next()
       }
    }
 }
