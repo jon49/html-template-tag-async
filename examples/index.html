@@ -1,3 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Yay!</title>
+   <!-- <script async type="module" src="hash-template.js"></script> -->
+</head>
+<body>
+
+   <div id=write>
+      <h1 _=title|title,text>Orange!</h1>
+      <p _=title|text></p>
+      <a _=yep|text;url|href></a>
+   </div>
+
+   <script>
+
 const chars = {
 	"&": "&amp;",
 	">": "&gt;",
@@ -59,9 +77,32 @@ class Runner {
    }
 }
 
-export default 
+const makeHTML =
    callback =>
    (literals, ...subs) => {
       var generator = htmlGenerator(literals, ...subs)
       return new Runner(generator, callback)
    }
+
+const html = makeHTML(x => console.log(x))
+
+let time = (time, msg) => new Promise((resolve, reject) => {
+  setTimeout( function() {
+    resolve(msg)  // Yay! Everything went well!
+  }, time) 
+})
+
+;(function() {
+   const yep = "Hello!"
+   const ok = "hhmmm"
+   var t = html`${ok}<p>that's right!</p>`
+   html`${yep}${time(1e3, "<h1>Yes!</h1>")}${t}$${time(2e3, "<h1>No!</h1>")}Alrighty!${[...Array(5).keys()].map(x => time((x+3)*1000, ""+x))}${`<h2>${ok}</h2>`}...${time(10e3, "fin!")}`
+   .start()
+   .catch(x => console.log(x))
+}());
+
+   </script>
+
+
+</body>
+</html>
