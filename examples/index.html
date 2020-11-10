@@ -4,84 +4,13 @@
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Yay!</title>
-   <!-- <script async type="module" src="hash-template.js"></script> -->
+   <script src="../src/index.js"></script>
 </head>
 <body>
 
-   <div id=write>
-      <h1 _=title|title,text>Orange!</h1>
-      <p _=title|text></p>
-      <a _=yep|text;url|href></a>
-   </div>
+   <h1>Watch the console!</h1>
 
    <script>
-
-const chars = {
-	"&": "&amp;",
-	">": "&gt;",
-	"<": "&lt;",
-	'"': "&quot;",
-	"'": "&#39;",
-	"`": "&#96;"
-};
-
-// Dynamically create a RegExp from the `chars` object
-const re = new RegExp(Object.keys(chars).join("|"), "g");
-
-// Return the escaped string
-const htmlEscape = (str = "") => String(str).replace(re, match => chars[match]);
-
-function* htmlGenerator(literals, ...subs) {
-   var length = literals.raw.length,
-      s = "",
-      escape = true
-   for (var i = 0; i < length; i++) {
-      let lit = literals.raw[i]
-      let sub = subs[i - 1]
-      if (sub) {
-         if (Array.isArray(sub)) { for (s of sub) if (s) yield s }
-         else yield escape ? sub : { e: sub }
-      }
-      lit = (escape = lit.endsWith("$")) ? lit.slice(0, -1) : lit
-      if (lit) yield lit
-   }
-}
-
-class Runner {
-   constructor(generator, callback) {
-      this.g = generator
-      this.c = callback
-   }
-   async start() {
-      var val, e
-      while ((val = this.g.next()) && !val.done) {
-         var v = val.value
-         if (v instanceof Runner || (v.e instanceof Runner && (v = v.e))) {
-            await v.start()
-            continue
-         }
-         if (e = v.e) {
-            if (e instanceof Promise) {
-               e = await e
-            }
-            this.c(htmlEscape(e))
-         } else if (v instanceof Promise) {
-            this.c(await v)
-         } else {
-            this.c(v)
-         }
-      }
-   }
-}
-
-const makeHTML =
-   callback =>
-   (literals, ...subs) => {
-      var generator = htmlGenerator(literals, ...subs)
-      return new Runner(generator, callback)
-   }
-
-const html = makeHTML(x => console.log(x))
 
 let time = (time, msg) => new Promise((resolve, reject) => {
   setTimeout( function() {
@@ -92,7 +21,7 @@ let time = (time, msg) => new Promise((resolve, reject) => {
 ;(function() {
    const yep = "Hello!"
    const ok = "hhmmm"
-   var t = html`${ok}<p>that's right!</p>`
+   var t = Promise.resolve(html`${ok}<p>that's right!</p>`)
    html`${yep}${time(1e3, "<h1>Yes!</h1>")}${t}$${time(2e3, "<h1>No!</h1>")}Alrighty!${[...Array(5).keys()].map(x => time((x+3)*1000, ""+x))}${`<h2>${ok}</h2>`}...${time(10e3, "fin!")}`
    .start()
    .catch(x => console.log(x))

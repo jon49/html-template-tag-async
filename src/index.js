@@ -1,3 +1,5 @@
+// Inspired by source: https://github.com/AntonioVdlC/html-template-tag
+;(function() {
 const chars = {
 	"&": "&amp;",
 	">": "&gt;",
@@ -29,38 +31,34 @@ function* htmlGenerator(literals, ...subs) {
    }
 }
 
+const catchError = x => x.catch("!!!!Error!!!!")
+
 class Runner {
-
-   constructor(generator, callback) {
+   constructor(generator) {
       this.g = generator
-      this.c = callback
    }
-
-   async start() {
+   async start(callback) {
       var val, e
       while ((val = this.g.next()) && !val.done) {
          var v = val.value
-         if (v instanceof Runner || (v.e instanceof Runner && (v = v.e))) {
-            await v.start()
+         var e = void 0
+         if (v instanceof Promise) {
+            v = await v
+         } else if (v?.e instanceof Promise) {
+            e = await v.e
+         }
+         if (!e && v?.e) e = v.e
+         if (v?.start || (e?.start && (v = e))) {
+            await catchError(v.start(callback))
             continue
          }
-         if (e = v.e) {
-            if (e instanceof Promise) {
-               e = await e
-            }
-            this.c(htmlEscape(e))
-         } else if (v instanceof Promise) {
-            this.c(await v)
-         } else {
-            this.c(v)
-         }
+         if (e) {
+            callback(htmlEscape(e))
+         } else callback(v)
       }
    }
 }
 
-export default 
-   callback =>
-   (literals, ...subs) => {
-      var generator = htmlGenerator(literals, ...subs)
-      return new Runner(generator, callback)
-   }
+window.html = (literals, ...subs) => new Runner(htmlGenerator(literals, ...subs))
+
+}());
