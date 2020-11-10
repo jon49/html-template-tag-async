@@ -23,7 +23,7 @@ let time = (time, msg) => new Promise((resolve, reject) => {
    const ok = "hhmmm"
    var t = Promise.resolve(html`${ok}<p>that's right!</p>`)
    html`${yep}${time(1e3, "<h1>Yes!</h1>")}${t}$${time(2e3, "<h1>No!</h1>")}Alrighty!${[...Array(5).keys()].map(x => time((x+3)*1000, ""+x))}${`<h2>${ok}</h2>`}...${time(10e3, "fin!")}`
-   .start()
+   .start(x => console.log(x))
    .catch(x => console.log(x))
 }());
 
