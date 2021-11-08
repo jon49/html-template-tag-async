@@ -24,7 +24,16 @@
    const ok = "ok"
    var nested = html`${ok}<p>that's right!</p>`
    try {
-    for await (let x of html`Variable:${hello}Nested HTML:${nested}Promise:${time(1, "message!")}Array:${[0,1]}Array of HTML:${[2, 3].map(x => html`${x}`)}Array of Promise:${[4,5].map(x => time(1,""+x))}Nested HTML:${html`${"<p>Paragraph</p>"}<p>Paragraph</p>`}Nested twice:${html`${html`I'm deeply nested!`}`}`)
+    for await (let x of html`
+Variable:${hello}
+Nested HTML:${nested}
+Promise:${time(1, "message!")}
+Array:${[0,1]}
+Array of HTML:${[2, 3].map(x => html`${x}`)}
+Array of Promise:${[4,5].map(x => time(1,""+x))}
+Nested HTML:${html`${"<p>Paragraph</p>"}<p>Paragraph</p>`}
+Nested twice:${html`${html`I'm deeply nested!`}`}
+$${"<p>Unescaped HTML!</p>"}`)
             console.log(x)
    }
    catch (e) {
