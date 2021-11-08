@@ -11,20 +11,26 @@
    <h1>Watch the console!</h1>
 
    <script>
+    import html from "./html-template-tag-async.js";
 
-let time = (time, msg) => new Promise((resolve, reject) => {
+    let time = (time, msg) => new Promise((resolve, reject) => {
   setTimeout( function() {
     resolve(msg)  // Yay! Everything went well!
   }, time) 
 })
 
-;(function() {
-   const yep = "Hello!"
-   const ok = "hhmmm"
-   var t = Promise.resolve(html`${ok}<p>that's right!</p>`)
-   html`${yep}${time(1e3, "<h1>Yes!</h1>")}${t}$${time(2e3, "<h1>No!</h1>")}Alrighty!${[...Array(5).keys()].map(x => time((x+3)*1000, ""+x))}${`<h2>${ok}</h2>`}...${time(10e3, "fin!")}`
-   .start(x => console.log(x))
-   .catch(x => console.log(x))
+;(async function() {
+   const hello = "Hello!"
+   const ok = "ok"
+   var nested = html`${ok}<p>that's right!</p>`
+   try {
+    for await (let x of html`Variable:${hello}Nested HTML:${nested}Promise:${time(1, "message!")}Array:${[0,1]}Array of HTML:${[2, 3].map(x => html`${x}`)}Array of Promise:${[4,5].map(x => time(1,""+x))}Nested HTML:${html`${"<p>Paragraph</p>"}<p>Paragraph</p>`}Nested twice:${html`${html`I'm deeply nested!`}`}`)
+            console.log(x)
+   }
+   catch (e) {
+       console.warn("There was an error!")
+       console.error(e)
+   }
 }());
 
    </script>
