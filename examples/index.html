@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Yay!</title>
-   <script src="../src/index.js"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
 </head>
 <body>
 
-   <h1>Watch the console!</h1>
-
-   <script>
+<script type=module>
     import html from "./html-template-tag-async.js";
+    import html2 from "./html-template-tag-stream.js";
 
     let time = (time, msg) => new Promise((resolve, reject) => {
   setTimeout( function() {
@@ -19,31 +18,38 @@
   }, time) 
 })
 
-;(async function() {
+async function testAsync() {
    const hello = "Hello!"
    const ok = "ok"
    var nested = html`${ok}<p>that's right!</p>`
    try {
-    for await (let x of html`
-Variable:${hello}
-Nested HTML:${nested}
-Promise:${time(1, "message!")}
-Array:${[0,1]}
-Array of HTML:${[2, 3].map(x => html`${x}`)}
-Array of Promise:${[4,5].map(x => time(1,""+x))}
-Nested HTML:${html`${"<p>Paragraph</p>"}<p>Paragraph</p>`}
-Nested twice:${html`${html`I'm deeply nested!`}`}
-$${"<p>Unescaped HTML!</p>"}`)
+    for await (let x of html`Variable:${hello}Nested HTML:${nested}Promise:${time(1, "message!")}Array:${[0,1]}Array of HTML:${[2, 3].map(x => html`${x}`)}Array of Promise:${[4,5].map(x => time(1,""+x))}Nested HTML:${html`${"<p>Paragraph</p>"}<p>Paragraph</p>`}Nested twice:${html`${html`I'm deeply nested!`}`}$${"<p>Unescaped HTML!</p>"}`)
             console.log(x)
    }
    catch (e) {
        console.warn("There was an error!")
        console.error(e)
    }
-}());
+}
 
-   </script>
+const hello = "Hello!"
+const ok = "ok"
+var nested = html2`${ok}<p>that's right!</p>`
+console.log("STREAM TESTS")
+try {
+    for (let x of html2`Variable:${hello}Nested HTML:${nested}Array:${[0,1]}Array of HTML:${[2, 3].map(x => html2`${x}`)}Nested HTML:${html2`${"<p>Paragraph</p>"}<p>Paragraph</p>`}Nested twice:${html2`${html2`I'm deeply nested!`}`}$${"<p>Unescaped HTML!</p>"}`)
+        console.log(x)
+}
+catch (e) {
+    console.warn("There was an error!")
+    console.error(e)
+}
 
+console.log("STREAM ASYNC TESTS")
 
+testAsync()
+
+</script>
+    
 </body>
 </html>
