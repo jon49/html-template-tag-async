@@ -16,39 +16,40 @@ function escape(str = "") {
     return String(str).replace(re, (match) => chars[match]);
 }
 
-let htmlPrototype : any
+let htmlPrototype = Object.getPrototypeOf(html)
 
-function* html(literals: TemplateStringsArray, ...subs: (Generator|string|null|undefined)[]|(Generator|string|null|undefined)[][]) {
-    let lits = literals.raw,
-      isRawHtml : boolean
-      length = lits.length
-    for (var i = 0; i < length; i++) {
+function* typeChecker(sub: any, isRawHtml: boolean): any {
+    let type
+    if (!sub) {
+    } else if ((type = typeof sub) === "string") {
+        yield isRawHtml ? sub : escape(sub)
+    } else if (type === "number") {
+        yield ""+sub
+    } else if(Array.isArray(sub)) {
+        for (let s of sub) {
+            for (let x of typeChecker(s, true)) {
+                yield x
+            }
+        }
+    } else if (typeof sub === "object" && sub?.constructor === htmlPrototype) {
+        for (let s of sub) {
+            yield s
+        }
+    }
+}
+
+function* html(literals: TemplateStringsArray, ...subs: (Generator|Promise<Generator|string|null|undefined>|string|null|undefined)[]|(Generator|Promise<Generator|string|null|undefined>|string|null|undefined)[][]) {
+    const lits = literals.raw, length = lits.length
+    let isRawHtml = true
+    for (let i = 0; i < length; i++) {
         let lit = lits[i]
         let sub = subs[i - 1]
-        if (sub) {
-            if (Array.isArray(sub)) {
-                for (let s of sub) {
-                    if (s) {
-                        // @ts-ignore
-                        if (typeof s === "object" && s.constructor === htmlPrototype) {
-                            for (let ss of s) {
-                                yield ss
-                            }
-                        } else {
-                            yield s
-                        }
-                    }
-                }
-            } else {
-                // @ts-ignore
-                yield isRawHtml ? sub : escape(sub)
-            }
+        for (let s of typeChecker(sub, isRawHtml)) {
+            yield s
         }
         lit = (isRawHtml = lit.endsWith("$")) ? lit.slice(0, -1) : lit
         if (lit) yield lit
     }
 }
-
-htmlPrototype = Object.getPrototypeOf(html)
 
 export default html
