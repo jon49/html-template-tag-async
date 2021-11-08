@@ -16,6 +16,8 @@ function escape(str = "") {
     return String(str).replace(re, (match) => chars[match]);
 }
 
+let htmlPrototype = Object.getPrototypeOf(html)
+
 function* typeChecker(sub: any, isRawHtml: boolean): any {
     let type
     if (!sub) {
@@ -29,10 +31,12 @@ function* typeChecker(sub: any, isRawHtml: boolean): any {
                 yield x
             }
         }
-    } else {
+    } else if (sub.constructor === htmlPrototype) {
         for (let s of sub) {
             yield s
         }
+    } else {
+        yield escape(sub.toString())
     }
 }
 
