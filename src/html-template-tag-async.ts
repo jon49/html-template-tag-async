@@ -36,10 +36,12 @@ async function* typeChecker(sub: any, isRawHtml: boolean): any {
                 yield x
             }
         }
-    } else if (typeof sub === "object" && sub?.constructor === htmlPrototype) {
+    } else if (sub.constructor === htmlPrototype) {
         for await (let s of sub) {
             yield s
         }
+    } else {
+        yield escape(sub.toString())
     }
 }
 
