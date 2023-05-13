@@ -1,0 +1,24 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+
+    "compilerOptions": {
+        "lib": ["es2022", "dom"],
+        "module": "es6",
+        "target": "es2022",
+
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "allowImportingTsExtensions": true,
+
+        "declaration": true,
+        "declarationDir": "lib",
+        "emitDeclarationOnly": true,
+
+        "outDir": "lib",
+        "rootDir": "src"
+    },
+    "include": ["src/**/*"]
+}
+
+

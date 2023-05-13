@@ -1,0 +1,37 @@
+{
+  "name": "html-template-tag-stream",
+  "version": "1.0.0",
+  "description": "ES6 Tagged Template for compiling HTML template streams.",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "type": "module",
+  "files": [
+    "./lib/index.js",
+    "./lib/index.d.ts"
+  ],
+  "scripts": {
+    "test": "deno test && npm start",
+    "start": "npx esbuild --format=esm --bundle --outfile=lib/index.js src/index.ts && tsc"
+  },
+  "keywords": [
+    "html",
+    "template",
+    "tag",
+    "es6",
+    "stream",
+    "literals",
+    "generator",
+    "async",
+    "service worker"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jon49/html-template-tag-async.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jon49/html-template-tag-async/issues"
+  },
+  "homepage": "https://github.com/jon49/html-template-tag-async#readme",
+  "author": "Jon Nyman",
+  "license": "ISC"
+}
