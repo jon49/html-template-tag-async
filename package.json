@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "test": "deno test && npm start",
-    "start": "npx esbuild --format=esm --bundle --outfile=lib/index.js src/index.ts && tsc"
+    "start": "npx esbuild --format=esm --bundle --outfile=lib/index.js src/async-generator-html.ts && tsc"
   },
   "keywords": [
     "html",

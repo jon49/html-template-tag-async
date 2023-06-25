@@ -1,4 +1,4 @@
-import html from "../src/index.ts";
+import html from "../src/async-generator-html.ts";
 import { assertEquals, assert } from "https://deno.land/std@0.186.0/testing/asserts.ts"
 import {
   describe,
