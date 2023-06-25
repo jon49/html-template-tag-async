@@ -3,7 +3,7 @@ import escape from './libs/html-es6cape.ts'
 
 const htmlPrototype = Object.getPrototypeOf(html)
 
-async function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
+function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     const type = typeof sub
     if (sub == null) {
         // Skip this.
@@ -13,7 +13,7 @@ async function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
         yield ""+sub
     } else if (sub instanceof Function) {
         // @ts-ignore sub is unknown and that is correct.
-        for (const s of typeChecker(sub, isRawHtml)) {
+        for (const s of typeChecker(sub(), isRawHtml)) {
             yield s
         }
     } else if (Array.isArray(sub)) {

@@ -11,7 +11,9 @@
   ],
   "scripts": {
     "test": "deno test && npm start",
-    "start": "npx esbuild --format=esm --bundle --outfile=lib/index.js src/async-generator-html.ts && tsc"
+    "start": "npm run build:generator && npm run build:async-generator && tsc",
+    "build:async-generator": "npx esbuild --format=esm --bundle --outfile=lib/index.js src/async-generator-html.ts",
+    "build:generator": "npx esbuild --format=esm --bundle --outfile=lib/generator-html.js src/generator-html.ts"
   },
   "keywords": [
     "html",
@@ -21,6 +23,7 @@
     "stream",
     "literals",
     "generator",
+    "async-generator",
     "async",
     "service worker"
   ],
