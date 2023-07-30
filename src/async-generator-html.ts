@@ -29,10 +29,7 @@ async function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
         sub = isPromise ? await <Promise<unknown>>sub : sub()
         // @ts-ignore sub is unknown and that is correct.
         for await (const s of typeChecker(sub, isRawHtml)) {
-            // @ts-ignore sub is unknown and that is correct.
-            for await (const x of typeChecker(s, isRawHtml)) {
-                yield x
-            }
+            yield s
         }
     // @ts-ignore we know that sub is a generator.
     } else if (sub.constructor === htmlPrototype) {

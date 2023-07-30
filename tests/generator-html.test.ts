@@ -56,34 +56,34 @@ describe("html", () => {
 
     it("should be able to work with arrays", () => {
         const xs : unknown[] = []
-        for (const s of html`<div>${["Hello", " World"]}</div>`) {
+        for (const s of html`<div>${["Hello", " World<"]}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should be able to work with nested generators", () => {
         const xs : unknown[] = []
-        for (const s of html`<div>${html`<p>${"Hello"} World</p>`}</div>`) {
+        for (const s of html`<div>${html`<p>${"Hello<"} World</p>`}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div><p>Hello World</p></div>")
+        assertEquals(xs.join(''), "<div><p>Hello&lt; World</p></div>")
     })
 
     it("should be able to work with random objects", () => {
         const xs : unknown[] = []
-        for (const s of html`<div>${{toString: () => "Hello World"}}</div>`) {
+        for (const s of html`<div>${{toString: () => "Hello World<"}}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should work with plain functions", () => {
         const xs : unknown[] = []
-        for (const s of html`<div>${() => "Hello World"}</div>`) {
+        for (const s of html`<div>${() => "Hello World<"}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should work with generators", async () => {

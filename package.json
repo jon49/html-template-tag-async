@@ -1,6 +1,6 @@
 {
   "name": "html-template-tag-stream",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "ES6 Tagged Template for compiling HTML template streams.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

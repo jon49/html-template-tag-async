@@ -54,7 +54,7 @@ describe("html", () => {
         assertEquals(xs.join(''), "<div></div>")
     })
 
-    it.only("should be able to work with promises", async () => {
+    it("should be able to work with promises", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${Promise.resolve("Hello World<")}</div>`) {
             xs.push(s)
@@ -64,18 +64,18 @@ describe("html", () => {
 
     it("should be able to work with arrays", async () => {
         const xs : unknown[] = []
-        for await (const s of html`<div>${["Hello", " World"]}</div>`) {
+        for await (const s of html`<div>${["Hello", " World<"]}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should be able to work with nested generators", async () => {
         const xs : unknown[] = []
-        for await (const s of html`<div>${html`<p>${"Hello"} World</p>`}</div>`) {
+        for await (const s of html`<div>${html`<p>${"Hello<"} World</p>`}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div><p>Hello World</p></div>")
+        assertEquals(xs.join(''), "<div><p>Hello&lt; World</p></div>")
     })
 
     it("should be able to work with random objects", async () => {
@@ -88,10 +88,10 @@ describe("html", () => {
 
     it("should work with plain functions", async () => {
         const xs : unknown[] = []
-        for await (const s of html`<div>${() => "Hello World"}</div>`) {
+        for await (const s of html`<div>${() => "Hello World<"}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should work with generators", async () => {
@@ -108,10 +108,10 @@ describe("html", () => {
 
     it("should work with async functions", async () => {
         const xs : unknown[] = []
-        for await (const s of html`<div>${async () => await Promise.resolve("Hello World")}</div>`) {
+        for await (const s of html`<div>${async () => await Promise.resolve("Hello World<")}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should not escape random objects when $ is used", async () => {

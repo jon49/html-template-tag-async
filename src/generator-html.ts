@@ -2,6 +2,7 @@
 import escape from './libs/html-es6cape.ts'
 
 const htmlPrototype = Object.getPrototypeOf(html)
+const GeneratorFunction = function*(){}.constructor
 
 function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     const type = typeof sub
@@ -12,21 +13,18 @@ function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     } else if (type === "number") {
         yield ""+sub
     // @ts-ignore we know that sub is a generator.
-    } else if (Array.isArray(sub)) {
+    } else if (Array.isArray(sub) || (sub instanceof GeneratorFunction && (sub = sub()))) {
         // @ts-ignore we know that sub is a generator or array.
         for (const s of sub) {
             // @ts-ignore Yes, it is of type unknown.
-            for (const x of typeChecker(s, true)) {
+            for (const x of typeChecker(s, isRawHtml)) {
                 yield x
             }
         }
     } else if (sub instanceof Function) {
         // @ts-ignore sub is unknown and that is correct.
         for (const s of typeChecker(sub(), isRawHtml)) {
-            // @ts-ignore sub is unknown and that is correct.
-            for (const x of typeChecker(s, isRawHtml)) {
-                yield x
-            }
+            yield s
         }
     // @ts-ignore we know that sub is a generator.
     } else if (sub.constructor === htmlPrototype) {
