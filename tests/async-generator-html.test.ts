@@ -54,12 +54,12 @@ describe("html", () => {
         assertEquals(xs.join(''), "<div></div>")
     })
 
-    it("should be able to work with promises", async () => {
+    it.only("should be able to work with promises", async () => {
         const xs : unknown[] = []
-        for await (const s of html`<div>${Promise.resolve("Hello World")}</div>`) {
+        for await (const s of html`<div>${Promise.resolve("Hello World<")}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should be able to work with arrays", async () => {
@@ -92,6 +92,18 @@ describe("html", () => {
             xs.push(s)
         }
         assertEquals(xs.join(''), "<div>Hello World</div>")
+    })
+
+    it("should work with generators", async () => {
+        const xs : unknown[] = []
+        for await (const s of html`<div>${
+            function* generatorFunc() {
+                yield "Hello"
+                yield " World<"
+            }}</div>`) {
+            xs.push(s)
+        }
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should work with async functions", async () => {

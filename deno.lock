@@ -10,11 +10,11 @@
   },
   "npm": {
     "specifiers": {
-      "html-es6cape@2.0.2": "html-es6cape@2.0.2"
+      "typescript@^5.1.6": "typescript@5.1.6"
     },
     "packages": {
-      "html-es6cape@2.0.2": {
-        "integrity": "sha512-utzhH8rq2VABdW1LsPdv5tmxeMNOtP83If0jKCa79xPBgLWfcMvdf9K+EZoxJ5P7KioCxTs6WBnSDWLQHJ2lWA==",
+      "typescript@5.1.6": {
+        "integrity": "sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==",
         "dependencies": {}
       }
     }

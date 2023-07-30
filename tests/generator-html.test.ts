@@ -6,7 +6,7 @@ import {
 } from "https://deno.land/std@0.186.0/testing/bdd.ts";
 
 describe("html", () => {
-    it("should return a string", async () => {
+    it("should return a string", () => {
         const xs : unknown[] = []
         for (const s of html`<div>Hello World</div>`) {
             xs.push(s)
@@ -84,6 +84,18 @@ describe("html", () => {
             xs.push(s)
         }
         assertEquals(xs.join(''), "<div>Hello World</div>")
+    })
+
+    it("should work with generators", async () => {
+        const xs : unknown[] = []
+        for await (const s of html`<div>${
+            function* generatorFunc() {
+                yield "Hello"
+                yield " World<"
+            }}</div>`) {
+            xs.push(s)
+        }
+        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
     })
 
     it("should not escape random objects when $ is used", () => {

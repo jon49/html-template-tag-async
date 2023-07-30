@@ -11,23 +11,30 @@ function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
         yield isRawHtml ? sub : escape(<string>sub)
     } else if (type === "number") {
         yield ""+sub
-    } else if (sub instanceof Function) {
-        // @ts-ignore sub is unknown and that is correct.
-        for (const s of typeChecker(sub(), isRawHtml)) {
-            yield s
-        }
+    // @ts-ignore we know that sub is a generator.
     } else if (Array.isArray(sub)) {
+        // @ts-ignore we know that sub is a generator or array.
         for (const s of sub) {
             // @ts-ignore Yes, it is of type unknown.
             for (const x of typeChecker(s, true)) {
                 yield x
             }
         }
+    } else if (sub instanceof Function) {
+        // @ts-ignore sub is unknown and that is correct.
+        for (const s of typeChecker(sub(), isRawHtml)) {
+            // @ts-ignore sub is unknown and that is correct.
+            for (const x of typeChecker(s, isRawHtml)) {
+                yield x
+            }
+        }
+    // @ts-ignore we know that sub is a generator.
     } else if (sub.constructor === htmlPrototype) {
         for (const s of <Generator>sub) {
             yield s
         }
     } else {
+        // @ts-ignore sub is unknown and that is correct.
         yield isRawHtml ? sub.toString() : escape(sub.toString())
     }
 }
