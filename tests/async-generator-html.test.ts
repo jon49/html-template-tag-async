@@ -1,4 +1,4 @@
-import html from "../src/async-generator-html.ts";
+import html, { isHtml } from "../src/async-generator-html.ts";
 import { assertEquals, assert } from "https://deno.land/std@0.186.0/testing/asserts.ts"
 import {
   describe,
@@ -122,5 +122,18 @@ describe("html", () => {
         assertEquals(xs.join(''), "<div><script>alert('hello')</script></div>")
     })
 
+    it("should tell if it is its own type", () => {
+        assert(isHtml(html``))
+    })
+
+    it("should tell if it is not its own type", () => {
+        assert(!isHtml(generatorFunc()))
+    })
+
 })
+
+function* generatorFunc() {
+    yield "Hello"
+    yield " World<"
+}
 

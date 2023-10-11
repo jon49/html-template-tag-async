@@ -1,4 +1,4 @@
-import html from "../src/generator-html.ts";
+import html, { isHtml } from "../src/generator-html.ts";
 import { assertEquals, assert } from "https://deno.land/std@0.186.0/testing/asserts.ts"
 import {
   describe,
@@ -106,6 +106,9 @@ describe("html", () => {
         assertEquals(xs.join(''), "<div><script>alert('hello')</script></div>")
     })
 
+    it("should tell if it is its own type", () => {
+        assert(isHtml(html``))
+    })
 })
 
 

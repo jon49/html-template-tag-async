@@ -4,6 +4,10 @@ import escape from './libs/html-es6cape.ts'
 const htmlPrototype = Object.getPrototypeOf(html)
 const GeneratorFunction = function*(){}.constructor
 
+export function isHtml(value: unknown): value is (ReturnType<typeof html>) {
+    return value?.constructor === htmlPrototype
+}
+
 function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     const type = typeof sub
     if (sub == null) {

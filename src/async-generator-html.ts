@@ -5,6 +5,10 @@ const htmlPrototype = Object.getPrototypeOf(html)
 
 const GeneratorFunction = function*(){}.constructor
 
+export function isHtml(value: unknown): value is (ReturnType<typeof html>) {
+    return value?.constructor === htmlPrototype
+}
+
 async function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     const type = typeof sub,
           isPromise = sub instanceof Promise
@@ -32,8 +36,8 @@ async function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
             yield s
         }
     // @ts-ignore we know that sub is a generator.
-    } else if (sub.constructor === htmlPrototype) {
-        for await (const s of <AsyncGenerator>sub) {
+    } else if (isHtml(sub)) {
+        for await (const s of sub) {
             yield s
         }
     } else {
