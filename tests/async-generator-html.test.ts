@@ -54,6 +54,14 @@ describe("html", () => {
         assertEquals(xs.join(''), "<div></div>")
     })
 
+    it("should be able to work with false value", async () => {
+        const xs : unknown[] = []
+        for await (const s of html`<div>${false}</div>`) {
+            xs.push(s)
+        }
+        assertEquals(xs.join(''), "<div></div>")
+    })
+
     it("should be able to work with promises", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${Promise.resolve("Hello World<")}</div>`) {

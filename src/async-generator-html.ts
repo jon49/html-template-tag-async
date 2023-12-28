@@ -12,8 +12,8 @@ export function isHtml(value: unknown): value is (ReturnType<typeof html>) {
 async function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     const type = typeof sub,
           isPromise = sub instanceof Promise
-    if (sub == null) {
-        // Skip null and undefined.
+    if (sub == null || sub === false) {
+        // Skip null and undefined and false.
     } else if (type === "string") {
         yield isRawHtml ? sub : escape(<string>sub)
     } else if (type === "number") {

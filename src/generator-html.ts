@@ -10,7 +10,7 @@ export function isHtml(value: unknown): value is (ReturnType<typeof html>) {
 
 function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     const type = typeof sub
-    if (sub == null) {
+    if (sub == null || sub === false) {
         // Skip this.
     } else if (type === "string") {
         yield isRawHtml ? sub : escape(<string>sub)
