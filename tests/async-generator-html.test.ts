@@ -134,7 +134,30 @@ o.spec("Async Generator HTML", () => {
         o(!isHtml(generatorFunc())).equals(true)
     })
 
+    o("should be able to handle deeply nested templates", async () => {
+        const xs : unknown[] = []
+        for await (const s of deeplyNested()) {
+            xs.push(s)
+        }
+        o(xs.join('')).equals("<div>Hello World</div>")
+    })
+
 })
+
+function deeplyNested() {
+    return html`
+<div>
+    ${() =>
+        async function* aGenerator() {
+            let val = await Promise.resolve("It worked!")
+            yield html`<div>`
+            yield Promise.resolve(html`<p>${val}</p>`)
+            yield html`</div>`
+        }
+    }
+</div>
+    `
+}
 
 function* generatorFunc() {
     yield "Hello"
