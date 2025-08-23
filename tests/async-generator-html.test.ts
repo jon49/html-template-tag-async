@@ -139,7 +139,11 @@ o.spec("Async Generator HTML", () => {
         for await (const s of deeplyNested()) {
             xs.push(s)
         }
-        o(xs.join('')).equals("<div>Hello World</div>")
+        o(xs.join('')).equals(`
+<div>
+    <div><p>It worked!</p></div>
+</div>
+    `)
     })
 
 })
@@ -151,7 +155,7 @@ function deeplyNested() {
         async function* aGenerator() {
             let val = await Promise.resolve("It worked!")
             yield html`<div>`
-            yield Promise.resolve(html`<p>${val}</p>`)
+            yield Promise.resolve(html`<p>${() => html`${() => Promise.resolve(val)}`}</p>`)
             yield html`</div>`
         }
     }
