@@ -13,7 +13,7 @@ function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     if (sub == null || sub === false) {
         // Skip this.
     } else if (type === "string") {
-        yield isRawHtml ? sub : escape(<string>sub)
+        yield isRawHtml ? sub : escape(sub as string)
     } else if (type === "number") {
         yield ""+sub
     // @ts-ignore we know that sub is a generator.
@@ -32,7 +32,7 @@ function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
         }
     // @ts-ignore we know that sub is a generator.
     } else if (sub.constructor === htmlPrototype) {
-        for (const s of <Generator>sub) {
+        for (const s of sub as Generator) {
             yield s
         }
     } else {

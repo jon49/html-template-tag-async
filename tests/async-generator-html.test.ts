@@ -1,108 +1,104 @@
 import html, { isHtml } from "../src/async-generator-html.ts";
-import { assertEquals, assert } from "https://deno.land/std@0.186.0/testing/asserts.ts"
-import {
-  describe,
-  it,
-} from "https://deno.land/std@0.186.0/testing/bdd.ts";
+import o from "ospec"
 
-describe("html", () => {
-    it("should return a string", async () => {
+o.spec("Async Generator HTML", () => {
+    o("should return a string", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>Hello World</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        o(xs.join('')).equals("<div>Hello World</div>")
     })
 
-    it("should be able to handle multiple strings", async () => {
+    o("should be able to handle multiple strings", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${"Hello World"}${""}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        o(xs.join('')).equals("<div>Hello World</div>")
     })
 
-    it("should encode html", async () => {
+    o("should encode html", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${"<script>alert('hello')</script>"}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>&lt;script&gt;alert(&#39;hello&#39;)&lt;/script&gt;</div>")
+        o(xs.join('')).equals("<div>&lt;script&gt;alert(&#39;hello&#39;)&lt;/script&gt;</div>")
     })
 
-    it("should skip encoding if $ is used", async () => {
+    o("should skip encoding if $ is used", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>$${"<script>alert('hello')</script>"}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div><script>alert('hello')</script></div>")
+        o(xs.join('')).equals("<div><script>alert('hello')</script></div>")
     })
 
-    it("should be able to work with numbers", async () => {
+    o("should be able to work with numbers", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${1}—${0}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>1—0</div>")
+        o(xs.join('')).equals("<div>1—0</div>")
     })
 
-    it("should be able to work with nil values", async () => {
+    o("should be able to work with nil values", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${null}${undefined}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div></div>")
+        o(xs.join('')).equals("<div></div>")
     })
 
-    it("should be able to work with false value", async () => {
+    o("should be able to work with false value", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${false}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div></div>")
+        o(xs.join('')).equals("<div></div>")
     })
 
-    it("should be able to work with promises", async () => {
+    o("should be able to work with promises", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${Promise.resolve("Hello World<")}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
+        o(xs.join('')).equals("<div>Hello World&lt;</div>")
     })
 
-    it("should be able to work with arrays", async () => {
+    o("should be able to work with arrays", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${["Hello", " World<"]}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
+        o(xs.join('')).equals("<div>Hello World&lt;</div>")
     })
 
-    it("should be able to work with nested generators", async () => {
+    o("should be able to work with nested generators", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${html`<p>${"Hello<"} World</p>`}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div><p>Hello&lt; World</p></div>")
+        o(xs.join('')).equals("<div><p>Hello&lt; World</p></div>")
     })
 
-    it("should be able to work with random objects", async () => {
+    o("should be able to work with random objects", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${{toString: () => "Hello World"}}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World</div>")
+        o(xs.join('')).equals("<div>Hello World</div>")
     })
 
-    it("should work with plain functions", async () => {
+    o("should work with plain functions", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${() => "Hello World<"}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
+        o(xs.join('')).equals("<div>Hello World&lt;</div>")
     })
 
-    it("should work with generators", async () => {
+    o("should work with generators", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${
             function* generatorFunc() {
@@ -111,31 +107,31 @@ describe("html", () => {
             }}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
+        o(xs.join('')).equals("<div>Hello World&lt;</div>")
     })
 
-    it("should work with async functions", async () => {
+    o("should work with async functions", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${async () => await Promise.resolve("Hello World<")}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div>Hello World&lt;</div>")
+        o(xs.join('')).equals("<div>Hello World&lt;</div>")
     })
 
-    it("should not escape random objects when $ is used", async () => {
+    o("should not escape random objects when $ is used", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>$${{toString: () => "<script>alert('hello')</script>"}}</div>`) {
             xs.push(s)
         }
-        assertEquals(xs.join(''), "<div><script>alert('hello')</script></div>")
+        o(xs.join('')).equals("<div><script>alert('hello')</script></div>")
     })
 
-    it("should tell if it is its own type", () => {
-        assert(isHtml(html``))
+    o("should tell if it is its own type", () => {
+        o(isHtml(html``)).equals(true)
     })
 
-    it("should tell if it is not its own type", () => {
-        assert(!isHtml(generatorFunc()))
+    o("should tell if it is not its own type", () => {
+        o(!isHtml(generatorFunc())).equals(true)
     })
 
 })

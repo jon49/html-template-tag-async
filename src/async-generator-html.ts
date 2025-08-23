@@ -15,7 +15,7 @@ async function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
     if (sub == null || sub === false) {
         // Skip null and undefined and false.
     } else if (type === "string") {
-        yield isRawHtml ? sub : escape(<string>sub)
+        yield isRawHtml ? sub : escape(sub as string)
     } else if (type === "number") {
         yield ""+sub
     // @ts-ignore we know that sub is a generator.
@@ -30,7 +30,7 @@ async function* typeChecker(sub: unknown, isRawHtml: boolean): unknown {
         }
     } else if (isPromise || sub instanceof Function) {
         // @ts-ignore we know that sub is either a promise or a function.
-        sub = isPromise ? await <Promise<unknown>>sub : sub()
+        sub = isPromise ? await sub as Promise<unknown> : sub()
         // @ts-ignore sub is unknown and that is correct.
         for await (const s of typeChecker(sub, isRawHtml)) {
             yield s

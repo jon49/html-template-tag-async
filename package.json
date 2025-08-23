@@ -12,7 +12,7 @@
     "./lib/generator-html.d.ts"
   ],
   "scripts": {
-    "test": "deno test && npm start",
+    "test": "ospec './tests/*.ts'",
     "start": "npm run build:generator && npm run build:async-generator && tsc",
     "build:async-generator": "npx esbuild --format=esm --bundle --outfile=lib/index.js src/async-generator-html.ts",
     "build:generator": "npx esbuild --format=esm --bundle --outfile=lib/generator-html.js src/generator-html.ts"
@@ -40,6 +40,11 @@
   "author": "Jon Nyman",
   "license": "ISC",
   "devDependencies": {
-    "typescript": "^5.1.6"
+    "@types/node": "^24.3.0",
+    "@types/ospec": "^4.2.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "ospec": "^4.2.1"
   }
 }
