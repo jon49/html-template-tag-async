@@ -12,6 +12,7 @@ export function isHtml(value: unknown): value is (ReturnType<typeof html>) {
 async function* typeChecker(sub: unknown, isRawHtml: boolean): AsyncGenerator<string, void, unknown> {
     const type = typeof sub,
           isPromise = sub instanceof Promise
+    if (sub == null) return
     if (Array.isArray(sub) || (sub instanceof GeneratorFunction && (sub = (sub as Function)()))) {
         for await (const s of sub as any[]) {
             for await (const x of typeChecker(s, isRawHtml)) {
@@ -77,7 +78,7 @@ async function* html(literals: TemplateStringsArray, ...subs: unknown[]) {
     
     // Then process the substitution that follows this literal
     const sub = subs[i];
-    if (sub !== undefined) {
+    if (sub != null) {
       // The isRawHtml flag applies to THIS substitution (determined by the literal that precedes it)
       for await (const resolved of resolveToString(sub, isRawHtml)) {
         yield resolved;

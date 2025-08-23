@@ -10,6 +10,14 @@ o.spec("Async Generator HTML", () => {
         o(xs.join('')).equals("<div>Hello World</div>")
     })
 
+    o("should be able to handle array of null sub", async () => {
+        const xs : unknown[] = []
+        for await (const s of html`<div>${[undefined, null, "OK"]}</div>`) {
+            xs.push(s)
+        }
+        o(xs.join('')).equals("<div>OK</div>")
+    })
+
     o("should be able to handle multiple strings", async () => {
         const xs : unknown[] = []
         for await (const s of html`<div>${"Hello World"}${""}</div>`) {
