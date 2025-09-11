@@ -10,8 +10,6 @@ This package is distributed via npm:
 npm install html-template-tag
 ```
 
-It can also be used in Deno.
-
 ## Usage
 
 ### String Interpolation
@@ -131,7 +129,7 @@ function streamResponse(generator) {
 }
 ```
 
-[See the tests for all the types you can pass in!](./tests/html.test.ts)
+[See the tests for all the types you can pass in!](./tests/async-generator-html.test.ts)
 
 ## License
 

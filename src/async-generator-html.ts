@@ -10,27 +10,31 @@ export function isHtml(value: unknown): value is (ReturnType<typeof html>) {
 }
 
 async function* typeChecker(sub: unknown, isRawHtml: boolean): AsyncGenerator<string, void, unknown> {
-    const type = typeof sub,
-          isPromise = sub instanceof Promise
-    if (sub == null) return
+    const isPromise = sub instanceof Promise
+    if (sub == null || sub === false || sub === "") return
     if (Array.isArray(sub) || (sub instanceof GeneratorFunction && (sub = (sub as Function)()))) {
-        for await (const s of sub as any[]) {
-            for await (const x of typeChecker(s, isRawHtml)) {
-                yield x
-            }
+      for await (const s of sub as any[]) {
+        for await (const x of typeChecker(s, isRawHtml)) {
+            yield x
         }
-    } else if ((isPromise && (sub = await sub)) || (sub instanceof Function && (sub = sub()))) {
+      }
+    } else if (isPromise || sub instanceof Function) {
+        if (isPromise) {
+            sub = await sub
+        } else if (sub instanceof Function) {
+            sub = sub()
+        }
         for await (const s of typeChecker(sub, isRawHtml)) {
             yield s
         }
     } else if (isHtml(sub)) {
-        for await (const s of sub) {
-            yield s
-        }
+      for await (const s of sub) {
+          yield s
+      }
     } else {
-        // I don't know how to handle it so just turn it into a string.
-        // @ts-ignore sub is unknown and that is correct.
-        yield isRawHtml ? sub.toString() : escape(sub.toString())
+      // I don't know how to handle it so just turn it into a string.
+      // @ts-ignore sub is unknown and that is correct.
+      yield isRawHtml ? sub.toString() : escape(sub.toString())
     }
 }
 

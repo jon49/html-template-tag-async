@@ -142,6 +142,22 @@ o.spec("Async Generator HTML", () => {
         o(!isHtml(generatorFunc())).equals(true)
     })
 
+    o("should be able to handle function which returns nil value", async () => {
+        const xs : unknown[] = []
+        for await (const s of html`<div>${() => null}</div>`) {
+            xs.push(s)
+        }
+        o(xs.join('')).equals("<div></div>")
+    })
+
+    o("should be able to handle function which returns 'false' value", async () => {
+        const xs : unknown[] = []
+        for await (const s of html`<div>${() => false}</div>`) {
+            xs.push(s)
+        }
+        o(xs.join('')).equals("<div></div>")
+    })
+
     o("should be able to handle deeply nested templates", async () => {
         const xs : unknown[] = []
         for await (const s of deeplyNested()) {
