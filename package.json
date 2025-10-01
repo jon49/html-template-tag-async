@@ -1,6 +1,6 @@
 {
   "name": "html-template-tag-stream",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "ES6 Tagged Template for compiling HTML template streams.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -11,8 +11,9 @@
   ],
   "scripts": {
     "test": "ospec './tests/*.ts'",
-    "start": "npm test && npm run build:async-generator && tsc",
-    "build:async-generator": "npx esbuild --format=esm --bundle --outfile=lib/index.js src/async-generator-html.ts"
+    "prestart": "rm -rf lib || true",
+    "start": "npm test && npm run build:async-generator",
+    "build:async-generator": "tsc && npx esbuild --format=esm --bundle --outfile=lib/index.js src/index.ts"
   },
   "keywords": [
     "html",

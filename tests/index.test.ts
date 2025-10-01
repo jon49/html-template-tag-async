@@ -1,4 +1,4 @@
-import html, { isHtml } from "../src/async-generator-html.ts";
+import html, { isHtml } from "../src/index.ts";
 import o from "ospec"
 
 o.spec("Async Generator HTML", () => {
